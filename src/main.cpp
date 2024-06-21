@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "adc.h"
 #include "config.h"
 #include "encoders.h"
 #include "systick.h"
@@ -27,7 +28,7 @@ void setup() {
   Serial.println(F(CODE));
   Serial.println(F(NAME));
   Serial.println(F("RDY"));
-   m_distance = encoders.robot_distance();
+  m_distance = encoders.robot_distance();
   Serial.println(m_distance);
 
 }
