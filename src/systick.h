@@ -12,12 +12,12 @@
 #ifndef SYSTICK_H
 #define SYSTICK_H
 #include "Arduino.h"
-//#include "adc.h"
+#include "adc.h"
 #include "config.h"
 //#include "motion.h"
 //#include "motors.h"
-//#include "sensors.h"
-//#include "switches.h"
+#include "sensors.h"
+#include "switches.h"
 class Systick {
  public:
   // don't let this start firing up before we are ready.
@@ -67,11 +67,11 @@ class Systick {
     // grab the encoder values first because they will continue to change
     encoders.update();
     //motion.update();
-    //sensors.update();
+    sensors.update();
     //battery.update();
 
     //motors.update_controllers(motion.velocity(), motion.omega(), sensors.get_steering_feedback());
-    //adc.start_conversion_cycle();
+    adc.start_conversion_cycle();
     // NOTE: no code should follow this line;
   }
 };
