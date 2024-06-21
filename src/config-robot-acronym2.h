@@ -127,16 +127,16 @@ const int EMITTER_DIAGONAL = EMITTER_B;
 // hardware ADC channel numbers
 
 // ADVANCED SENSOR
-const int RFS_ADC_CHANNEL = 0;
-const int RSS_ADC_CHANNEL = 1;
-const int LSS_ADC_CHANNEL = 2;
-const int LFS_ADC_CHANNEL = 3;
+//const int //RFS_ADC_CHANNEL = 0;
+//const int RSS_ADC_CHANNEL = 1;
+//const int LSS_ADC_CHANNEL = 2;
+//const int LFS_ADC_CHANNEL = 3;
 
 // BASIC SENSOR - just repeat the front sensor to make the code cleaner
-// #define RFS_ADC_CHANNEL 1
-// #define RSS_ADC_CHANNEL 0
-// #define LSS_ADC_CHANNEL 2
-// #define LFS_ADC_CHANNEL 1
+#define RFS_ADC_CHANNEL 1
+#define RSS_ADC_CHANNEL 0
+#define LSS_ADC_CHANNEL 2
+#define LFS_ADC_CHANNEL 1
 // there are two other ADC channels used by the robot
 const int SWITCHES_ADC_CHANNEL = 6;
 const int BATTERY_ADC_CHANNEL = 7;

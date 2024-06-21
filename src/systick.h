@@ -66,11 +66,11 @@ class Systick {
     // NOTE - the code here seems to get inlined and so the function is 2800 bytes!
     // grab the encoder values first because they will continue to change
     encoders.update();
-    //motion.update();
+    motion.update();
     sensors.update();
-    //battery.update();
+    battery.update();
 
-    //motors.update_controllers(motion.velocity(), motion.omega(), sensors.get_steering_feedback());
+    motors.update_controllers(motion.velocity(), motion.omega(), sensors.get_steering_feedback());
     adc.start_conversion_cycle();
     // NOTE: no code should follow this line;
   }
