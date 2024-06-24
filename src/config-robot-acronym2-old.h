@@ -8,8 +8,8 @@ const uint32_t BAUDRATE = 9600;
 
 
 // encoder polarity is either 1 or -1 and is used to account for reversal of the encoder phases
-#define ENCODER_LEFT_POLARITY (-1)
-#define ENCODER_RIGHT_POLARITY (1)
+#define ENCODER_LEFT_POLARITY (1)
+#define ENCODER_RIGHT_POLARITY (-1)
 
 // similarly, the motors may be wired with different polarity and that is defined here so that
 // setting a positive voltage always moves the robot forwards
@@ -28,7 +28,7 @@ const int BACK_WALL_TO_CENTER = 48;
 // the pulses.
 // Finally, move the mouse in a straight line through 1000mm of travel to work
 // out the wheel diameter.
-const float ENCODER_PULSES = 12.00;
+const float ENCODER_PULSES = 6.00;
 const float GEAR_RATIO = 50.00;
 const float WHEEL_DIAMETER = 32.00;
 

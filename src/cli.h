@@ -381,6 +381,9 @@ class CommandLineInterface {
       case 8:
         mouse.conf_log_front_sensor();
         break;
+      case 9:
+        mouse.test_move();
+        break;
       default:
         // just to be safe...
         sensors.disable();

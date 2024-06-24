@@ -562,7 +562,7 @@ class Mouse {
    */
   void panic() {
     while (!switches.button_pressed()) {
-      blink(1);
+      blink(10);
     }
     switches.wait_for_button_release();
     digitalWrite(LED_BUILTIN, 0);
@@ -767,6 +767,24 @@ class Mouse {
     delay(200);
     sensors.disable();
   }
+
+  // Test move
+  void test_move() {
+  
+    Serial.println("go");
+
+    sensors.enable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
+    motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    
+    Serial.println("done");
+
+  }
+
+
+
+
 
  private:
   Heading m_heading;

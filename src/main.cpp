@@ -14,10 +14,10 @@
 #include "systick.h"
 
 Systick systick;                          // the main system control loop
-Encoders encoders;                        // tracks the wheel encoder counts
 AnalogueConverter adc;                    // controls all analogue conversions
 Battery battery(BATTERY_ADC_CHANNEL);     // monitors battery voltage
 Switches switches(SWITCHES_ADC_CHANNEL);  // monitors the button and switches
+Encoders encoders;                        // tracks the wheel encoder counts
 Sensors sensors;                          // make sensor alues from adc vdata
 Motion motion;                            // high level motion operations
 Motors motors;                            // low level control for drive motors
@@ -61,8 +61,9 @@ void setup() {
   digitalWrite(LED_BUILTIN, 0);
 
   adc.begin();
-  encoders.begin();
   motors.begin();
+  encoders.begin();
+
   systick.begin();
 
   if (switches.button_pressed()) {
@@ -86,6 +87,7 @@ void setup() {
 
 void loop() {
 
+
   if (switches.button_pressed()) {
     switches.wait_for_button_release();
     int function = switches.read();
@@ -93,6 +95,7 @@ void loop() {
   } else if (cli.read_serial()) {
     cli.interpret_line();
   }
+
 
 //  m_switches_adc = switches.adc_reading();
 // Serial.println(m_switches_adc);
@@ -121,24 +124,46 @@ void loop() {
 */
 
 /*
-  digitalWrite(MOTOR_RIGHT_DIR, LOW);
-  analogWrite(MOTOR_RIGHT_PWM, 50);
-  digitalWrite(MOTOR_LEFT_DIR, LOW);
-  analogWrite(MOTOR_LEFT_PWM, 50);
-
-  delay(2000);                       // wait for a second
-   m_distance = encoders.robot_distance();
+  m_distance = encoders.robot_distance();
   Serial.println(m_distance);
 
-  digitalWrite(MOTOR_RIGHT_DIR, HIGH);
+  digitalWrite(MOTOR_RIGHT_DIR, LOW);
   analogWrite(MOTOR_RIGHT_PWM, 50);
   digitalWrite(MOTOR_LEFT_DIR, HIGH);
   analogWrite(MOTOR_LEFT_PWM, 50);
 
   delay(2000);                       // wait for a second
+
+  m_distance = encoders.robot_distance();
   Serial.println(m_distance);
+
+  digitalWrite(MOTOR_RIGHT_DIR, LOW);
+  analogWrite(MOTOR_RIGHT_PWM, 0);
+  digitalWrite(MOTOR_LEFT_DIR, HIGH);
+  analogWrite(MOTOR_LEFT_PWM, 0);
+
+  delay(2000);                       // wait for a second
+
+  digitalWrite(MOTOR_RIGHT_DIR, HIGH);
+  analogWrite(MOTOR_RIGHT_PWM, 50);
+  digitalWrite(MOTOR_LEFT_DIR, LOW);
+  analogWrite(MOTOR_LEFT_PWM, 50);
+
+  delay(2000);                       // wait for a second
+  digitalWrite(MOTOR_RIGHT_DIR, LOW);
+  analogWrite(MOTOR_RIGHT_PWM, 0);
+  digitalWrite(MOTOR_LEFT_DIR, HIGH);
+  analogWrite(MOTOR_LEFT_PWM, 0);
+
+  delay(2000);                       // wait for a second
 */
 
+/*
+  delay(1000);                       // wait for a second
+
+  m_distance = motion.position();
+  Serial.println(m_distance);
+*/
  
 }
 

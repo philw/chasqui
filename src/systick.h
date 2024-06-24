@@ -14,8 +14,8 @@
 #include "Arduino.h"
 #include "adc.h"
 #include "config.h"
-//#include "motion.h"
-//#include "motors.h"
+#include "motion.h"
+#include "motors.h"
 #include "sensors.h"
 #include "switches.h"
 class Systick {
