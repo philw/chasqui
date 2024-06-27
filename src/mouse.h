@@ -776,9 +776,10 @@ class Mouse {
     sensors.enable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
-    motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    motion.move(200, 500, 0, 200);
     
     Serial.println("done");
+    motion.stop();
 
   }
 

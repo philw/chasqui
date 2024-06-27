@@ -348,7 +348,7 @@ class CommandLineInterface {
    *
    * The function can handle any number of additional functions if called as a
    * result of a command line input like 'F 45'. Otherwise, a command like 'F 1'
-   * is equivalent to selecting 1 on te function switches and then pressing
+   * is equivalent to selecting 1 on the function switches and then pressing
    * the 'start' button.
    *
    */

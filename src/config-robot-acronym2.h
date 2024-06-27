@@ -161,9 +161,9 @@ const int BACK_WALL_TO_CENTER = 48;
 // the pulses.
 // Finally, move the mouse in a straight line through 1000mm of travel to work
 // out the wheel diameter.
-const float ENCODER_PULSES = 6.00;
+const float ENCODER_PULSES = 12.00;
 const float GEAR_RATIO = 50.00;
-const float WHEEL_DIAMETER = 32.00;
+const float WHEEL_DIAMETER = 31.8;
 
 // Mouse radius is the distance between the contact patches of the drive wheels.
 // A good starting approximation is half the distance between the wheel centres.
@@ -178,7 +178,7 @@ const float MOUSE_RADIUS = 38.70;  // 39.50; // Adjust on test
 // reliably drive in a straight line.
 // This number adjusts the encoder count and must be  added to the right
 // and subtracted from the left motor.
-const float ROTATION_BIAS = 0.0025;  // Negative makes robot curve to left
+const float ROTATION_BIAS = -0.1;  // Negative makes robot curve to left
 
 // Now we can pre-calculate the key constats for the motion control
 const float MM_PER_COUNT = PI * WHEEL_DIAMETER / (ENCODER_PULSES * GEAR_RATIO);
@@ -247,8 +247,8 @@ const float STEERING_KD = 0.00;
 const float STEERING_ADJUST_LIMIT = 10.0;  // deg/s
 
 // encoder polarity is either 1 or -1 and is used to account for reversal of the encoder phases
-#define ENCODER_LEFT_POLARITY (1)
-#define ENCODER_RIGHT_POLARITY (-1)
+#define ENCODER_LEFT_POLARITY (-1)
+#define ENCODER_RIGHT_POLARITY (1)
 
 // similarly, the motors may be wired with different polarity and that is defined here so that
 // setting a positive voltage always moves the robot forwards
