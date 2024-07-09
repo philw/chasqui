@@ -776,14 +776,37 @@ class Mouse {
     sensors.enable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
-    motion.move(200, 500, 0, 200);
+    motion.move(200, SEARCH_SPEED, 0, 200);
     
     Serial.println("done");
     motion.stop();
 
   }
 
+  // Test turn
+  void test_turn() {
+    //float robot_angle;
+    reporter.report_sensor_track_header();
+    //motion.reset_drive_system();
+    while(true) {
+      uint8_t side = sensors.wait_for_user_start();
+      motion.reset_drive_system();
+      sensors.set_steering_mode(STEERING_OFF);
+      //robot_angle = encoders.robot_angle();
+      //Serial.println(robot_angle);
+      reporter.report_sensor_track();
+      if(side == LEFT_START) {
+        motion.spin_turn(90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
+      } else if(side == RIGHT_START) {
+        motion.spin_turn(-90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN /2 );
+      }
+      delay(200);
+      //robot_angle = encoders.robot_angle();
+      //Serial.println(robot_angle);
+       reporter.report_sensor_track();
+ }
 
+  }
 
 
 

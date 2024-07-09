@@ -384,6 +384,9 @@ class CommandLineInterface {
       case 9:
         mouse.test_move();
         break;
+      case 10:
+        mouse.test_turn();
+        break;
       default:
         // just to be safe...
         sensors.disable();
