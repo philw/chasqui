@@ -83,7 +83,7 @@ class Mouse {
    *
    * TODO: need a function just to adjust forward position
    *
-   * TODO: It would be better to use the distance rather than sensor readigs here
+   * TODO: It would be better to use the distance rather than sensor readings here
    */
   static void stopAndAdjust() {
     float remaining = (FULL_CELL + HALF_CELL) - motion.position();
@@ -771,16 +771,19 @@ class Mouse {
   // Test move
   void test_move() {
   
-    Serial.println("go");
+    //Serial.println("go");
 
+    sensors.wait_for_user_start();
     sensors.enable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
-    motion.move(200, SEARCH_SPEED, 0, 200);
-    
-    Serial.println("done");
-    motion.stop();
+    motion.move(500, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    sensors.disable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
 
+    //Serial.println("done");
+    
   }
 
   // Test turn
@@ -804,9 +807,23 @@ class Mouse {
       //robot_angle = encoders.robot_angle();
       //Serial.println(robot_angle);
        reporter.report_sensor_track();
- }
-
+    }
   }
+
+  // Test steering
+  void test_steering() {
+
+    delay(500);
+    sensors.enable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEER_NORMAL);
+    motion.move(500, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    sensors.disable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
+  }
+
+
 
 
 

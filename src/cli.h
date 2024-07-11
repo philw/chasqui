@@ -387,6 +387,9 @@ class CommandLineInterface {
       case 10:
         mouse.test_turn();
         break;
+      case 11:
+        mouse.test_steering();
+        break;
       default:
         // just to be safe...
         sensors.disable();

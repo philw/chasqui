@@ -57,18 +57,18 @@ RAW values for the front sensor when the robot is backed up to a wall
 // wall sensor thresholds and constants
 // RAW values for the front sensor when the robot is backed up to a wall
 // with another wall ahead
-const int FRONT_LEFT_CALIBRATION = 97;
-const int FRONT_RIGHT_CALIBRATION = 48;
+const int FRONT_LEFT_CALIBRATION = 257;
+const int FRONT_RIGHT_CALIBRATION = 257;
 // RAW values for the side sensors when the robot is centered in a cell
 // and there is no wall ahead
-const int LEFT_CALIBRATION = 87;
-const int RIGHT_CALIBRATION = 80;
+const int LEFT_CALIBRATION = 325;
+const int RIGHT_CALIBRATION = 325;
 
 // The front linear constant is the value of k needed to make the function
 // sensors.get_distance(sensor,k) return 68 when the mouse is backed up
 // against a wall with only a wall ahead
-const int FRONT_LINEAR_CONSTANT = 1030;
-const int FRONT_REFERENCE = 850;  // reading when mouse centered with wall ahead
+const int FRONT_LINEAR_CONSTANT = 930;
+const int FRONT_REFERENCE = 335;  // reading when mouse centered with wall ahead
 
 // SS90E turn thresholds. This is the front sum reading to trigger a turn
 // it changes a bit if there is an adjacent wall. The threshold is set for
@@ -178,7 +178,7 @@ const float MOUSE_RADIUS = 39.5; //38.70;  // 39.50; // Adjust on test
 // reliably drive in a straight line.
 // This number adjusts the encoder count and must be  added to the right
 // and subtracted from the left motor.
-const float ROTATION_BIAS = -0.15;  // Negative makes robot curve to left
+const float ROTATION_BIAS = -0.12;  // Negative makes robot curve to left
 
 // Now we can pre-calculate the key constats for the motion control
 const float MM_PER_COUNT = PI * WHEEL_DIAMETER / (ENCODER_PULSES * GEAR_RATIO);
@@ -195,7 +195,7 @@ const float LOOP_INTERVAL = (1.0 / LOOP_FREQUENCY);
 
 // Dynamic performance constants
 // There is a video describing how to get these numbers and calculate the feedforward
-// constnats here: https://youtu.be/BrabDeHGsa0
+// constants here: https://youtu.be/BrabDeHGsa0
 const float FWD_KM = 475.0;  // mm/s/Volt
 const float FWD_TM = 0.190;  // forward time constant
 const float ROT_KM = 775.0;  // deg/s/Volt
