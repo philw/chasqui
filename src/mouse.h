@@ -823,7 +823,17 @@ class Mouse {
     sensors.set_steering_mode(STEERING_OFF);
   }
 
+  void see_walls() {
+    sensors.enable();
+    motion.reset_drive_system();
+    while (not switches.button_pressed()) {
+      reporter.print_walls();
+      Serial.println("");
+      delay(500);
+    }
+    switches.wait_for_button_release();
 
+  }
 
 
 

@@ -57,8 +57,8 @@ RAW values for the front sensor when the robot is backed up to a wall
 // wall sensor thresholds and constants
 // RAW values for the front sensor when the robot is backed up to a wall
 // with another wall ahead
-const int FRONT_LEFT_CALIBRATION = 257;
-const int FRONT_RIGHT_CALIBRATION = 257;
+const int FRONT_LEFT_CALIBRATION = 390;
+const int FRONT_RIGHT_CALIBRATION = 390;
 // RAW values for the side sensors when the robot is centered in a cell
 // and there is no wall ahead
 const int LEFT_CALIBRATION = 325;
@@ -292,7 +292,7 @@ const float RIGHT_SCALE = (float)SIDE_NOMINAL / RIGHT_CALIBRATION;
 // the values above which, a wall is seen
 const int LEFT_THRESHOLD = 40;   // minimum value to register a wall
 const int RIGHT_THRESHOLD = 40;  // minimum value to register a wall
-const int FRONT_THRESHOLD = 20;  // minimum value to register a wall
+const int FRONT_THRESHOLD = 36;  // minimum value to register a wall
 
 // the distance through the cell at which the corresponding sensor
 // will see a falling edge
