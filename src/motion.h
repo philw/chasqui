@@ -61,8 +61,15 @@ class Motion {
     motors.enable_controllers();
   }
 
+/*
   void stop() {
     motors.stop();
+  }
+*/
+
+  void stop() {
+    forward.stop();
+    rotation.stop();
   }
 
   void disable_drive() {

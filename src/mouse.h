@@ -179,29 +179,7 @@ class Mouse {
     motion.set_position(SENSING_POSITION);
   }
 
-  //***************************************************************************//
-  /***
-   * bring the mouse to a halt in the center of the current cell. That is,
-   * the cell it is entering.
-   */
-  void stop_at_center() {
-    bool has_wall = sensors.see_front_wall;
-    sensors.set_steering_mode(STEERING_OFF);
-    float remaining = (FULL_CELL + HALF_CELL) - motion.position();
-    // finish at very low speed so we can adjust from the wall ahead if present
-    motion.start_move(remaining, motion.velocity(), 30, motion.acceleration());
-    if (has_wall) {
-      while (sensors.get_front_sum() < FRONT_REFERENCE) {
-        delay(2);
-      }
-    } else {
-      while (not motion.move_finished()) {
-        delay(2);
-      };
-    }
-    // Be sure robot has come to a halt.
-    motion.stop();
-  }
+
 
   //***************************************************************************//
   /**
@@ -241,7 +219,7 @@ class Mouse {
    */
   void turn_back() {
     reporter.log_action_status('B', ' ', m_location, m_heading);
-    stop_at_center();
+    //stop_at_center();
     turn_IP180();
     float distance = SENSING_POSITION - HALF_CELL;
     motion.move(distance, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
@@ -302,7 +280,7 @@ class Mouse {
     }
     // we are entering the target cell so come to an orderly
     // halt in the middle of that cell
-    stop_at_center();
+    //stop_at_center();
     Serial.println();
     Serial.println(F("Arrived!  "));
     delay(250);
@@ -402,7 +380,7 @@ class Mouse {
     }
     // we are entering the target cell so come to an orderly
     // halt in the middle of that cell
-    stop_at_center();
+    //stop_at_center();
     sensors.disable();
     Serial.println();
     Serial.println(F("Arrived!  "));
@@ -776,8 +754,8 @@ class Mouse {
     sensors.wait_for_user_start();
     sensors.enable();
     motion.reset_drive_system();
-    sensors.set_steering_mode(STEERING_OFF);
-    motion.move(500, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    sensors.set_steering_mode(STEER_NORMAL);
+    motion.move(300, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
     sensors.disable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
@@ -835,7 +813,121 @@ class Mouse {
 
   }
 
+  void slow_wall_follow() {
+    m_handStart = true;
+    sensors.wait_for_user_start();
+    sensors.enable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEER_NORMAL);
+    // start at back wall
+    // move to center and stop there
+    Serial.println(F("Starting"));
+    Serial.println(motion.position());
+    motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+    motion.set_position(HALF_CELL);
+    
+    // move to sensing position
+    motion.move(SENSING_POSITION - HALF_CELL, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+    Serial.println(motion.position());
+    // and look for walls
+    bool left_wall = sensors.see_left_wall;
+    bool front_wall = sensors.see_front_wall;
+    bool right_wall = sensors.see_right_wall;
+    print_walls(left_wall, front_wall, right_wall);
+    // continue and stop in center of cell
+    stop_at_center(front_wall);
+    sensors.set_steering_mode(STEERING_OFF);
+    // Turn depends on walls
 
+    motion.stop();
+
+/*
+    while (m_location != target) {
+      if (switches.button_pressed()) {
+        break;
+      }
+      Serial.println();
+      reporter.log_action_status('-', ' ', m_location, m_heading);
+      sensors.set_steering_mode(STEER_NORMAL);
+      m_location = m_location.neighbour(m_heading);
+      update_map();
+      Serial.write(' ');
+      Serial.write('|');
+      Serial.write(' ');
+      char action = '#';
+      if (m_location != target) {
+        if (!sensors.see_left_wall) {
+          turn_left();
+          action = 'L';
+        } else if (!sensors.see_front_wall) {
+          move_ahead();
+          action = 'F';
+        } else if (!sensors.see_right_wall) {
+          turn_right();
+          action = 'R';
+        } else {
+          turn_back();
+          action = 'B';
+        }
+      }
+      reporter.log_action_status(action, ' ', m_location, m_heading);
+    }
+    // we are entering the target cell so come to an orderly
+    // halt in the middle of that cell
+    stop_at_center();
+    Serial.println();
+    Serial.println(F("Arrived!  "));
+    delay(250);
+    sensors.disable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
+*/
+  }
+
+  //***************************************************************************//
+  /***
+   * bring the mouse to a halt in the center of the current cell. That is,
+   * the cell it is entering.
+   */
+  //void stop_at_center(bool has_wall) {
+  void stop_at_center(bool front_wall) {
+    //bool has_wall = sensors.see_front_wall;
+    sensors.set_steering_mode(STEER_NORMAL);
+    //float remaining = FULL_CELL - motion.position();
+    float remaining = 72;
+    // finish at very low speed so we can adjust from the wall ahead if present
+    motion.start_move(remaining, motion.velocity(), 30, motion.acceleration());
+    if (front_wall) {
+      while (sensors.get_front_sum() < FRONT_REFERENCE) {
+        delay(2);
+      }
+    } else {
+      while (not motion.move_finished()) {
+        delay(2);
+      };
+    }
+    // Be sure robot has come to a halt.
+    motion.stop();
+  }
+
+  void print_walls(bool left_wall, bool front_wall, bool right_wall) {
+    if (left_wall) {
+      Serial.print('L');
+    } else {
+      Serial.print('-');
+    }
+    if (front_wall) {
+      Serial.print('F');
+    } else {
+      Serial.print('-');
+    }
+    if (right_wall) {
+      Serial.print('R');
+    } else {
+      Serial.print('-');
+    }
+    Serial.println(" ");
+  }
 
  private:
   Heading m_heading;

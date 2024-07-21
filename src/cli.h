@@ -393,6 +393,9 @@ class CommandLineInterface {
       case 12:
         mouse.see_walls();
         break;
+      case 13:
+        mouse.slow_wall_follow();
+        break;
       default:
         // just to be safe...
         sensors.disable();

@@ -68,7 +68,7 @@ const int RIGHT_CALIBRATION = 325;
 // sensors.get_distance(sensor,k) return 68 when the mouse is backed up
 // against a wall with only a wall ahead
 const int FRONT_LINEAR_CONSTANT = 930;
-const int FRONT_REFERENCE = 335;  // reading when mouse centered with wall ahead
+const int FRONT_REFERENCE = 425;  // reading when mouse centered with wall ahead
 
 // SS90E turn thresholds. This is the front sum reading to trigger a turn
 // it changes a bit if there is an adjacent wall. The threshold is set for
@@ -163,7 +163,7 @@ const int BACK_WALL_TO_CENTER = 48;
 // out the wheel diameter.
 const float ENCODER_PULSES = 12.00;
 const float GEAR_RATIO = 50.00;
-const float WHEEL_DIAMETER = 31.8;
+const float WHEEL_DIAMETER = 34.6;
 
 // Mouse radius is the distance between the contact patches of the drive wheels.
 // A good starting approximation is half the distance between the wheel centres.
@@ -178,7 +178,8 @@ const float MOUSE_RADIUS = 39.5; //38.70;  // 39.50; // Adjust on test
 // reliably drive in a straight line.
 // This number adjusts the encoder count and must be  added to the right
 // and subtracted from the left motor.
-const float ROTATION_BIAS = -0.12;  // Negative makes robot curve to left
+//const float ROTATION_BIAS = -0.16;  // Negative makes robot curve to left
+const float ROTATION_BIAS = -0.25;  // Negative makes robot curve to left
 
 // Now we can pre-calculate the key constats for the motion control
 const float MM_PER_COUNT = PI * WHEEL_DIAMETER / (ENCODER_PULSES * GEAR_RATIO);
@@ -260,9 +261,9 @@ const float STEERING_ADJUST_LIMIT = 10.0;  // deg/s
 //***** PERFORMANCE CONSTANTS************************************************//
 // search and run speeds in mm/s and mm
 const int SEARCH_SPEED = 400;
-const int SEARCH_ACCELERATION = 2000;
-const int SEARCH_TURN_SPEED = 300;
-const int SMOOTH_TURN_SPEED = 500;
+const int SEARCH_ACCELERATION = 1000 / 5;
+const int SEARCH_TURN_SPEED = 300 / 10;
+const int SMOOTH_TURN_SPEED = 500 / 10;
 const int FAST_TURN_SPEED = 600;
 const int FAST_RUN_SPEED_MAX = 2500;
 
