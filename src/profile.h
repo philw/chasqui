@@ -71,7 +71,7 @@ class Profile {
 
   /// @brief  Begin a profile. Once started, it will automatically run to completion
   ///         Subsequent calls before completion supercede all the parameters.
-  ///         Called may monitor progress using is_finished() method
+  ///         Caller may monitor progress using is_finished() method
   /// @param distance     (mm)     always positive
   /// @param top_speed    (mm/s)   negative values move the robot in reverse
   /// @param final_speed  (mm/s)

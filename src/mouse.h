@@ -754,7 +754,7 @@ class Mouse {
     sensors.wait_for_user_start();
     sensors.enable();
     motion.reset_drive_system();
-    sensors.set_steering_mode(STEER_NORMAL);
+    sensors.set_steering_mode(STEERING_OFF);
     motion.move(300, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
     sensors.disable();
     motion.reset_drive_system();
@@ -777,7 +777,7 @@ class Mouse {
       //Serial.println(robot_angle);
       reporter.report_sensor_track();
       if(side == LEFT_START) {
-        motion.spin_turn(90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
+        motion.spin_turn(100, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
       } else if(side == RIGHT_START) {
         motion.spin_turn(-90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN /2 );
       }
@@ -824,20 +824,38 @@ class Mouse {
     Serial.println(F("Starting"));
     Serial.println(motion.position());
     motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+
+    while(true) {
+
+    sensors.set_steering_mode(STEER_NORMAL);
+
     motion.set_position(HALF_CELL);
     
     // move to sensing position
     motion.move(SENSING_POSITION - HALF_CELL, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
-    Serial.println(motion.position());
+    //Serial.println(motion.position());
     // and look for walls
     bool left_wall = sensors.see_left_wall;
     bool front_wall = sensors.see_front_wall;
     bool right_wall = sensors.see_right_wall;
     print_walls(left_wall, front_wall, right_wall);
     // continue and stop in center of cell
-    stop_at_center(front_wall);
+    stop_at_center();
+
     sensors.set_steering_mode(STEERING_OFF);
-    // Turn depends on walls
+
+    if(!left_wall) {
+      turn_IP90L();
+    } else if(front_wall && !right_wall) {
+      turn_IP90R();
+    } else if(front_wall && right_wall) {
+      turn_IP180();
+    }
+    sensors.set_steering_mode(STEER_NORMAL);
+    //break;
+
+    // and again
+    }
 
     motion.stop();
 
@@ -890,24 +908,41 @@ class Mouse {
    * the cell it is entering.
    */
   //void stop_at_center(bool has_wall) {
-  void stop_at_center(bool front_wall) {
-    //bool has_wall = sensors.see_front_wall;
+  void stop_at_center() {
+    Serial.println(F("start stop at center"));
+    bool has_wall = sensors.see_front_wall;
     sensors.set_steering_mode(STEER_NORMAL);
-    //float remaining = FULL_CELL - motion.position();
-    float remaining = 72;
+    float remaining = FULL_CELL - motion.position();
+    //float remaining = 78;
     // finish at very low speed so we can adjust from the wall ahead if present
     motion.start_move(remaining, motion.velocity(), 30, motion.acceleration());
-    if (front_wall) {
-      while (sensors.get_front_sum() < FRONT_REFERENCE) {
+
+    if(has_wall) {
+      //Serial.println(F("there is a front wall"));
+      while(sensors.get_front_sum() < FRONT_REFERENCE) {
+        //Serial.println(sensors.get_front_sum());
         delay(2);
       }
     } else {
-      while (not motion.move_finished()) {
+
+      //Serial.println(F("no front wall"));
+      while(not motion.move_finished()) {
         delay(2);
       };
     }
     // Be sure robot has come to a halt.
+    Serial.println(F("now at center"));
     motion.stop();
+  }
+
+  void show_counts() {
+    
+    while (not switches.button_pressed()) {
+      Serial.print(encoders.left_count());
+      Serial.print(" - ");
+      Serial.println(encoders.right_count());
+      delay(500);
+    }
   }
 
   void print_walls(bool left_wall, bool front_wall, bool right_wall) {

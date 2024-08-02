@@ -146,6 +146,8 @@ class Encoders {
     m_robot_distance += m_fwd_change;
     m_rot_change = (right_change - left_change) * DEG_PER_MM_DIFFERENCE;
     m_robot_angle += m_rot_change;
+    m_left_count += left_delta;
+    m_right_count += right_delta;
   }
 
   /**
@@ -213,6 +215,22 @@ class Encoders {
     return angle;
   }
 
+  int left_count() {
+    int count;
+    ATOMIC {
+      count = m_left_count;
+    }
+    return count;
+  }
+
+  int right_count() {
+    int count;
+    ATOMIC {
+      count = m_right_count;
+    }
+    return count;
+  }
+
   // None of the variables in this class should be directly available to the rest
   // of the code without a guard to ensure atomic access
  private:
@@ -224,6 +242,8 @@ class Encoders {
   // internal use only to track encoder input edges
   int m_left_counter;
   int m_right_counter;
+  int m_left_count;
+  int m_right_count;
 };
 
 // A bit of indirection for convenience because the encoder instance is

@@ -53,7 +53,7 @@
  * characteristics of the sensors you use. Do your own calibration and
  * define a constant in the robot config file. This method is not tied
  * to any sensor in particular. Just give it the calibration constant and
- * the sensor value. You can, for example, use it to linearise the fron
+ * the sensor value. You can, for example, use it to linearise the front
  * sum.
  *
  * The linearised value is limited to 200mm because the signal to noise of
@@ -61,7 +61,7 @@
  * measure distance out that far with the standard sensors.
  *
  * The linearity is pretty good for most sensors until you get to within
- * about 20mm. It is, however, almost always monotonic within 5mm or a target
+ * about 20mm. It is, however, almost always monotonic within 5mm of a target
  * so it is always possible to use the value to adjust, for example, forward
  * distance from a wall ahead.
  *
@@ -74,7 +74,7 @@ enum {
   STEERING_OFF,
 };
 
-// used in the wait_for_user_start_function to indicate whih sensor was occluded
+// used in the wait_for_user_start_function to indicate which sensor was occluded
 const uint8_t NO_START = 0;
 const uint8_t LEFT_START = 1;
 const uint8_t RIGHT_START = 2;
@@ -137,7 +137,7 @@ class Sensors {
    * @param error calculated from wall sensors, Negative if too far right
    * @return steering adjustment in degrees
    *
-   * TODO: It is not clear that this belongs here rather tham for example,
+   * TODO: It is not clear that this belongs here rather than for example,
    *       in a Robot class.
    */
   float calculate_steering_adjustment() {
@@ -160,7 +160,7 @@ class Sensors {
   /***************************************************************************
    * This is just a way of letting the emnitters turn on for the second read.
    * ADC Conversions happen anyway.
-   * with the sendors disabled, you will probably get zero for the raw value on
+   * with the sensors disabled, you will probably get zero for the raw value on
    * all sensor channels (0..5).
    */
 
