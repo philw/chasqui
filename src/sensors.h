@@ -214,7 +214,7 @@ class Sensors {
     lfs.raw = adc.get_raw(LFS_ADC_CHANNEL);
 
     // this is the value that is normally used for wall detection and steering
-    // yes, it wouldbe faster to do integer arithmetic here
+    // yes, it would be faster to do integer arithmetic here
     lfs.value = FRONT_LEFT_SCALE * lfs.raw;
     lss.value = LEFT_SCALE * lss.raw;
     rss.value = RIGHT_SCALE * rss.raw;

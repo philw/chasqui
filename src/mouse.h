@@ -755,7 +755,7 @@ class Mouse {
     sensors.enable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
-    motion.move(300, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
+    motion.move(1000, SEARCH_SPEED, 0, SEARCH_ACCELERATION);
     sensors.disable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);
@@ -777,7 +777,7 @@ class Mouse {
       //Serial.println(robot_angle);
       reporter.report_sensor_track();
       if(side == LEFT_START) {
-        motion.spin_turn(100, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
+        motion.spin_turn(90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
       } else if(side == RIGHT_START) {
         motion.spin_turn(-90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN /2 );
       }

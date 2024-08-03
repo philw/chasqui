@@ -161,9 +161,9 @@ const int BACK_WALL_TO_CENTER = 48;
 // the pulses.
 // Finally, move the mouse in a straight line through 1000mm of travel to work
 // out the wheel diameter.
-const float ENCODER_PULSES = 12.00;
-const float GEAR_RATIO = 50.00;
-const float WHEEL_DIAMETER = 31.0;
+const float ENCODER_PULSES = 24.00;
+const float GEAR_RATIO = 30.00;
+const float WHEEL_DIAMETER = 28.5;
 
 // Mouse radius is the distance between the contact patches of the drive wheels.
 // A good starting approximation is half the distance between the wheel centres.
@@ -171,17 +171,16 @@ const float WHEEL_DIAMETER = 31.0;
 // small amount. AFTER you have the wheel diameter and gear ratio calibrated,
 // have the mouse turn in place and adjust the MOUSE_RADIUS until these turns are
 // as accurate as you can get them
-const float MOUSE_RADIUS = 37.0; //38.70;  // 39.50; // Adjust on test
+const float MOUSE_RADIUS = 39.0; //38.70;  // 39.50; // Adjust on test
 
 // The robot is likely to have wheels of different diameters or motors of slightly
 // different characteristics and that must be compensated for if the robot is to
 // reliably drive in a straight line.
 // This number adjusts the encoder count and must be  added to the right
 // and subtracted from the left motor.
-//const float ROTATION_BIAS = -0.16;  // Negative makes robot curve to left
-const float ROTATION_BIAS = -0.12;  // Negative makes robot curve to left
+const float ROTATION_BIAS = -0.000;  // Negative makes robot curve to left
 
-// Now we can pre-calculate the key constats for the motion control
+// Now we can pre-calculate the key constants for the motion control
 const float MM_PER_COUNT = PI * WHEEL_DIAMETER / (ENCODER_PULSES * GEAR_RATIO);
 const float MM_PER_COUNT_LEFT = (1 - ROTATION_BIAS) * MM_PER_COUNT;
 const float MM_PER_COUNT_RIGHT = (1 + ROTATION_BIAS) * MM_PER_COUNT;
@@ -260,10 +259,10 @@ const float STEERING_ADJUST_LIMIT = 10.0;  // deg/s
 
 //***** PERFORMANCE CONSTANTS************************************************//
 // search and run speeds in mm/s and mm
-const int SEARCH_SPEED = 400;
-const int SEARCH_ACCELERATION = 1000 / 5;
-const int SEARCH_TURN_SPEED = 300 / 10;
-const int SMOOTH_TURN_SPEED = 500 / 10;
+const int SEARCH_SPEED = 200;
+const int SEARCH_ACCELERATION = 500;
+const int SEARCH_TURN_SPEED = 300;
+const int SMOOTH_TURN_SPEED = 500;
 const int FAST_TURN_SPEED = 600;
 const int FAST_RUN_SPEED_MAX = 2500;
 
@@ -346,4 +345,4 @@ const float BATTERY_MULTIPLIER = (ADC_REF_VOLTS / ADC_FSR / BATTERY_DIVIDER_RATI
 const int MOTOR_MAX_PWM = 255;
 
 // the position in the cell where the sensors are sampled.
-const float SENSING_POSITION = 165.0;
+const float SENSING_POSITION = 170.0;
