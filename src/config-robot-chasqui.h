@@ -22,7 +22,7 @@
  * The sensors consist of SFH4550 emitters and BPW96B detectors.
  *
  *****************************************************************************/
-#define NAME "ACRONYM2"
+#define NAME "CHASQUI"
 
 //***** SENSOR CALIBRATION **************************************************//
 /**

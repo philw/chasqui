@@ -112,16 +112,16 @@ const float HALF_CELL = FULL_CELL / 2.0;
 #define ROBOT_NOT_DEFINED 0
 #define ROBOT_CORE_OSMIUM 1
 #define ROBOT_ORION 2
-#define ROBOT_ACRONYM2 3
+#define ROBOT_ 3
 
-#define ROBOT ROBOT_ACRONYM2
+#define ROBOT ROBOT_CHASQUI
 
 
 #if ROBOT == ROBOT_CORE_OSMIUM
 #include "config-robot-osmium.h"
 #elif ROBOT == ROBOT_ORION
 #include "config-robot-orion.h"
-#elif ROBOT == ROBOT_ACRONYM2
+#elif ROBOT == ROBOT_CHASQUI
 #include "config-robot-chasqui.h"
 #else
 #error "NO ROBOT DEFINED"
