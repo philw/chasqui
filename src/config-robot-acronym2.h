@@ -163,7 +163,7 @@ const int BACK_WALL_TO_CENTER = 48;
 // out the wheel diameter.
 const float ENCODER_PULSES = 24.00;
 const float GEAR_RATIO = 30.00;
-const float WHEEL_DIAMETER = 28.5;
+const float WHEEL_DIAMETER = 28.45; // was 28.5
 
 // Mouse radius is the distance between the contact patches of the drive wheels.
 // A good starting approximation is half the distance between the wheel centres.
@@ -171,7 +171,7 @@ const float WHEEL_DIAMETER = 28.5;
 // small amount. AFTER you have the wheel diameter and gear ratio calibrated,
 // have the mouse turn in place and adjust the MOUSE_RADIUS until these turns are
 // as accurate as you can get them
-const float MOUSE_RADIUS = 39.0; //38.70;  // 39.50; // Adjust on test
+const float MOUSE_RADIUS = 38.35; //38.70;  // 39.50; // Adjust on test
 
 // The robot is likely to have wheels of different diameters or motors of slightly
 // different characteristics and that must be compensated for if the robot is to
@@ -259,7 +259,7 @@ const float STEERING_ADJUST_LIMIT = 10.0;  // deg/s
 
 //***** PERFORMANCE CONSTANTS************************************************//
 // search and run speeds in mm/s and mm
-const int SEARCH_SPEED = 200;
+const int SEARCH_SPEED = 400;
 const int SEARCH_ACCELERATION = 500;
 const int SEARCH_TURN_SPEED = 300;
 const int SMOOTH_TURN_SPEED = 500;

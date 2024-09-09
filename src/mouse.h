@@ -777,9 +777,9 @@ class Mouse {
       //Serial.println(robot_angle);
       reporter.report_sensor_track();
       if(side == LEFT_START) {
-        motion.spin_turn(90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
+        motion.spin_turn(360, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN / 2);
       } else if(side == RIGHT_START) {
-        motion.spin_turn(-90, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN /2 );
+        motion.spin_turn(-360, OMEGA_SPIN_TURN, ALPHA_SPIN_TURN /2 );
       }
       delay(200);
       //robot_angle = encoders.robot_angle();
