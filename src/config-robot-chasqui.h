@@ -14,7 +14,7 @@
 
 /*****************************************************************************
  *
- * ACRONYM2 is a specific implementation of UKMARSBOT CORE used for Phil's robot
+ * Chasqui is a specific implementation of UKMARSBOT CORE used for Phil's robot
  *
  * It uses a wall sensor board with three emitter-detector pairs. Gearmotors
  * with 50:1 ratio gearboxes and standard encoder discs.

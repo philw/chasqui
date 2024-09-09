@@ -122,7 +122,7 @@ const float HALF_CELL = FULL_CELL / 2.0;
 #elif ROBOT == ROBOT_ORION
 #include "config-robot-orion.h"
 #elif ROBOT == ROBOT_ACRONYM2
-#include "config-robot-acronym2.h"
+#include "config-robot-chasqui.h"
 #else
 #error "NO ROBOT DEFINED"
 #endif
