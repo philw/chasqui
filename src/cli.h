@@ -397,7 +397,10 @@ class CommandLineInterface {
         mouse.slow_wall_follow();
         break;
       case 14:
-        mouse.show_counts();
+        mouse.less_slow_wall_follow();        
+        break;
+      case 15:
+        mouse.smooth_wall_follow();        
         break;
       default:
         // just to be safe...
