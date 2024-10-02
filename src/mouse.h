@@ -229,8 +229,25 @@ class Mouse {
 
   //***************************************************************************//
   /***
+   * A simple maze search
+
+
+    Serial.println(F("Searching Maze"));
+    Serial.println();
+    sensors.wait_for_user_start();
+    Serial.println(F("Search TO"));
+    m_handStart = true;
+    m_location = START;
+    m_heading = NORTH;
+    search_to(maze.goal());
+
+   */
+
+
+  //***************************************************************************//
+  /***
    * A simple wall follower that knows where it is
-   * It will follow the left wall until it reaches the supplied taget
+   * It will follow the left wall until it reaches the supplied target
    * cell.
    */
   void follow_to(Location target) {
@@ -290,26 +307,36 @@ class Mouse {
   }
 
   void search_to(Location target) {
+
+    maze.set_mask(MASK_OPEN);
     maze.flood(target);
+    reporter.print_maze(1);
     delay(200);
+
     sensors.enable();
     motion.reset_drive_system();
     sensors.set_steering_mode(STEERING_OFF);  // never steer from zero speed
+
     if (not m_handStart) {
       // back up to the wall behind
       // TODO: what if there is not a wall?
       // perhaps the caller should decide so this ALWAYS starts at the cell centre?
       motion.move(-BACK_WALL_TO_CENTER, SEARCH_SPEED / 4, 0, SEARCH_ACCELERATION / 2);
     }
-    motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+
+    //if(m_handStart) {
+      motion.move(BACK_WALL_TO_CENTER, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+    //} else {
+    //  motion.move(SENSING_POSITION - HALF_CELL, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+    //}
     motion.set_position(HALF_CELL);
-    Serial.print(F("Off we go..."));
+    Serial.print(F("Off we go to "));
     printer.print('[');
     printer.print(target.x);
     printer.print(',');
     printer.print(target.y);
     printer.print(']');
-    Serial.println();
+    //Serial.println();
 
     motion.wait_until_position(SENSING_POSITION);
     // Each iteration of this loop starts at the sensing point
@@ -323,8 +350,21 @@ class Mouse {
       m_location = m_location.neighbour(m_heading);  // the cell we are about to enter
       update_map();
       maze.flood(target);
+      Serial.println();
+      reporter.print_maze(1);
+      Serial.println();
       unsigned char newHeading = maze.heading_to_smallest(m_location, m_heading);
-      unsigned char hdgChange = (newHeading - m_heading) & 0x3;
+      unsigned char hdgChange = (newHeading - m_heading) & 0x03;
+      Serial.print(newHeading);
+      Serial.print(" , ");
+      if (newHeading < HEADING_COUNT) {
+        Serial.print(hdg_letters[newHeading]);
+      } else {
+        Serial.print('!');
+      }
+      Serial.print(" , ");
+      Serial.println(hdgChange);
+      float distance;
       if (m_location != target) {
         switch (hdgChange) {
           // each of the following actions will finish with the
@@ -334,20 +374,44 @@ class Mouse {
             move_ahead();
             break;
           case RIGHT:
-            turn_right();
+            //turn_right();
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP90R();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = right_from(m_heading);
             break;
           case BACK:
-            turn_back();
+            //turn_back();
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP180();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = behind_from(m_heading);
             break;
           case LEFT:
-            turn_left();
+            //turn_left();
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP90L();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = left_from(m_heading);
             break;
         }
       }
     }
     // we are entering the target cell so come to an orderly
     // halt in the middle of that cell
-    //stop_at_center();
+    stop_at_center();
     sensors.disable();
     Serial.println();
     Serial.println(F("Arrived!  "));
@@ -464,18 +528,36 @@ class Mouse {
    *
    */
   int search_maze() {
+    //maze.initialise(); // Hold the button down during a reset to initialize the maze
+    Serial.println(F("Searching Maze"));
+    Serial.println();
+
+
+
+    // Search to target
     sensors.wait_for_user_start();
-    Serial.println(F("Search TO"));
+    Serial.println(F("Search to goal"));
     m_handStart = true;
     m_location = START;
     m_heading = NORTH;
+    reporter.print_where(m_location, m_heading);
     search_to(maze.goal());
+
+    // the mouse is now stopped at the center of maze.goal()
+    // turn 180 to go back
+    turn_IP180();
+    m_heading = behind_from(m_heading);
+    reporter.print_where(m_location, m_heading);
+
+
     maze.flood(START);
 
-    Heading best_direction = maze.heading_to_smallest(m_location, m_heading);
-    turn_to_face(best_direction);
     m_handStart = false;
     search_to(START);
+
+    // it's now back at the start having learnt something
+    // so let's try again
+
     turn_to_face(NORTH);
     motion.stop();
     motion.disable_drive();

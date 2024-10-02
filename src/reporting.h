@@ -78,7 +78,7 @@ const char hdg_letters[] = "NESW";
     break;
 
 // and use a case statement to display the output
-// remmeber that each identifier string ends up in flash
+// remember that each identifier string ends up in flash
 
 void print_name(int operation) {
   switch (operation) {
@@ -253,7 +253,7 @@ class Reporter {
 
   /***
    * This specialised report is meant to be used when calibrating the forward
-   * sensors. The robot would be placed up agains a wall ahead and commanded to
+   * sensors. The robot would be placed up against a wall ahead and commanded to
    * back up slowly for some fixed distance - 180mm seems appropriate. As it
    * backs up the sensor readings are transmitted so that you can build a table
    * of expected sensor readings against distance from the front wall. This
@@ -381,7 +381,7 @@ class Reporter {
     printer.print('@');
     print_justified((int)motion.position(), 4);
     printer.print(' ');
-    // print_walls();
+    //print_walls();
     printer.print('}');
     printer.print(' ');
   }
@@ -452,7 +452,7 @@ class Reporter {
 
   void print_maze(int style = PLAIN) {
     const char dirChars[] = "^>v<* ";
-    maze.flood(maze.goal());
+    //maze.flood(maze.goal());
 
     for (int y = MAZE_HEIGHT - 1; y >= 0; y--) {
       printNorthWalls(y);
@@ -492,6 +492,33 @@ class Reporter {
     printSouthWalls(0);
     printer.println();
   }
+
+  void print_where(Location location, Heading heading) {
+    printer.print('[');
+    printer.print(location.x);
+    printer.print(',');
+    printer.print(location.y);
+    printer.print(']');
+    printer.print(' ');
+    if (heading < HEADING_COUNT) {
+      printer.print(hdg_letters[heading]);
+    } else {
+      printer.print('!');
+    }
+    printer.println();
+/*
+  void log_action_status(char action, char note, Location location, Heading heading) {
+    printer.print('{');
+    printer.print(action);
+    printer.print(note);
+    printer.print('[');
+*/
+
+
+  }
+
+
+
 };
 
 #endif

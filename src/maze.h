@@ -138,8 +138,8 @@ enum Direction { AHEAD, RIGHT, BACK, LEFT, DIRECTION_COUNT };
  * values for cost and changes will be needed. the AVR has very limited RAM
  * so the simplest option is used here.
  */
-#define MAZE_WIDTH 16
-#define MAZE_HEIGHT 16
+#define MAZE_WIDTH 3 // 16
+#define MAZE_HEIGHT 4 // 16
 #define MAZE_CELL_COUNT (MAZE_WIDTH * MAZE_HEIGHT)
 #define MAX_COST (MAZE_CELL_COUNT - 1)
 
@@ -238,7 +238,7 @@ class Location {
  * When the robot searches and updates the map, you should call the method
  * update_wall_state() to record changes. The similar-looking method
  * set_wall_state() is private for a reason. It is unconditional and may
- * result in walls being changed after they were frst seen.
+ * result in walls being changed after they were first seen.
  *
  */
 class Maze {
@@ -332,12 +332,14 @@ class Maze {
 
   /// @brief set empty maze with border walls and the start cell, zero costs
   void initialise() {
+    Serial.println(F("Initializing Maze"));
     for (int x = 0; x < MAZE_WIDTH; x++) {
       for (int y = 0; y < MAZE_HEIGHT; y++) {
         m_walls[x][y].north = UNKNOWN;
         m_walls[x][y].east = UNKNOWN;
         m_walls[x][y].south = UNKNOWN;
         m_walls[x][y].west = UNKNOWN;
+        m_cost[x][y] = 0;
       }
     }
     for (int x = 0; x < MAZE_WIDTH; x++) {
@@ -352,8 +354,8 @@ class Maze {
     set_wall_state(START, NORTH, EXIT);
 
     // the open maze treats unknowns as exits
-    set_mask(MASK_OPEN);
-    flood(goal());
+    //set_mask(MASK_OPEN);
+    //flood(goal());
   }
 
   void set_mask(const MazeMask mask) {
@@ -391,7 +393,17 @@ class Maze {
    * @param target - the cell from which all distances are calculated
    */
 
-  void flood(const Location target) {
+  void flood(Location target) {
+
+    Serial.print(F("Flood from "));
+    Serial.print('[');
+    Serial.print(target.x);
+    Serial.print(',');
+    Serial.print(target.y);
+    Serial.print(']');
+    Serial.println();
+
+
     for (int x = 0; x < MAZE_WIDTH; x++) {
       for (int y = 0; y < MAZE_HEIGHT; y++) {
         m_cost[x][y] = (uint8_t)MAX_COST;
@@ -404,7 +416,7 @@ class Maze {
      * possibly be for a classic maze is 64 (MAZE_CELL_COUNT/4) cells.
      * HOWEVER, this is unproven
      */
-    Queue<Location, MAZE_CELL_COUNT / 4> queue;
+    Queue<Location, MAZE_CELL_COUNT> queue;
     m_cost[target.x][target.y] = 0;
     queue.add(target);
     while (queue.size() > 0) {
@@ -432,7 +444,7 @@ class Maze {
    *
    * This could be extended to look ahead then towards the goal but it
    * probably is not worth the effort
-   * @brief get the geating to the lowest cost neighbour
+   * @brief get the bearing to the lowest cost neighbour
    * @param cell
    * @param start_heading
    * @return

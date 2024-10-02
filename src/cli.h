@@ -353,6 +353,10 @@ class CommandLineInterface {
    *
    */
   void run_function(int cmd) {
+
+    int r;
+    Serial.println(cmd);
+
     if (cmd == 0) {
       return;
     }
@@ -361,7 +365,9 @@ class CommandLineInterface {
         mouse.show_sensor_calibration();
         break;
       case 2:
-        mouse.search_maze();
+        //Serial.println(F("Start"));
+        r = mouse.search_maze();
+        Serial.println(r);
         break;
       case 3: {
         mouse.follow_to(maze.goal());
