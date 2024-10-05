@@ -310,7 +310,7 @@ class Mouse {
 
     maze.set_mask(MASK_OPEN);
     maze.flood(target);
-    reporter.print_maze(1);
+    //reporter.print_maze(1);
     delay(200);
 
     sensors.enable();
@@ -321,7 +321,7 @@ class Mouse {
       // back up to the wall behind
       // TODO: what if there is not a wall?
       // perhaps the caller should decide so this ALWAYS starts at the cell centre?
-      motion.move(-BACK_WALL_TO_CENTER, SEARCH_SPEED / 4, 0, SEARCH_ACCELERATION / 2);
+      motion.move(-(BACK_WALL_TO_CENTER + 15), SEARCH_SPEED / 4, 0, SEARCH_ACCELERATION / 2);
     }
 
     //if(m_handStart) {
@@ -351,7 +351,7 @@ class Mouse {
       update_map();
       maze.flood(target);
       Serial.println();
-      reporter.print_maze(1);
+      //reporter.print_maze(1);
       Serial.println();
       unsigned char newHeading = maze.heading_to_smallest(m_location, m_heading);
       unsigned char hdgChange = (newHeading - m_heading) & 0x03;
@@ -443,7 +443,73 @@ class Mouse {
    * always be one of the four cardinal directions NESW
    */
   void run_to(Location target) {
-    (void)target;
+
+    maze.set_mask(MASK_CLOSED);
+    maze.flood(target);
+    //reporter.print_maze(1);
+    delay(200);
+
+    sensors.enable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);  // never steer from zero speed
+    motion.move(BACK_WALL_TO_CENTER, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+    motion.set_position(HALF_CELL);
+
+    motion.wait_until_position(SENSING_POSITION);
+    // Each iteration of this loop starts at the sensing point
+    while (m_location != target) {
+      if (switches.button_pressed()) {  // allow user to abort gracefully
+        break;
+      }
+      sensors.set_steering_mode(STEER_NORMAL);
+      m_location = m_location.neighbour(m_heading);  // the cell we are about to enter
+      unsigned char newHeading = maze.heading_to_smallest(m_location, m_heading);
+      unsigned char hdgChange = (newHeading - m_heading) & 0x03;
+      float distance;
+      if (m_location != target) {
+        switch (hdgChange) {
+          case AHEAD:
+            move_ahead();
+            break;
+          case RIGHT:
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP90R();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = right_from(m_heading);
+            break;
+          case BACK:
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP180();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = behind_from(m_heading);
+            break;
+          case LEFT:
+            stop_at_center();
+            sensors.set_steering_mode(STEERING_OFF);
+            turn_IP90L();
+            sensors.set_steering_mode(STEER_NORMAL);
+            distance = SENSING_POSITION - HALF_CELL;
+            motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+            motion.set_position(SENSING_POSITION);
+            m_heading = left_from(m_heading);
+            break;
+        }
+      }
+    }
+    stop_at_center();
+    sensors.disable();
+    Serial.println();
+    delay(250);
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
   }
 
   void turn_to_face(Heading newHeading) {
@@ -528,41 +594,93 @@ class Mouse {
    *
    */
   int search_maze() {
-    //maze.initialise(); // Hold the button down during a reset to initialize the maze
+    
+    // Hold the button down during a reset to initialize the maze
     Serial.println(F("Searching Maze"));
-    Serial.println();
 
-
-
-    // Search to target
-    sensors.wait_for_user_start();
-    Serial.println(F("Search to goal"));
-    m_handStart = true;
+    m_handStart = true;  // only the first time around
     m_location = START;
     m_heading = NORTH;
+    sensors.wait_for_user_start();
+
+    while(true) {
+
+      if (switches.button_pressed()) {  // allow user to abort gracefully
+        break;
+      }
+
+      // Search to target
+      Serial.println(F("Search to goal"));
+      reporter.print_where(m_location, m_heading);
+      search_to(maze.goal());
+
+      // the mouse is now stopped at the center of maze.goal()
+      // turn 180 to go back
+      turn_IP180();
+      delay(2000);
+      m_heading = behind_from(m_heading);
+      reporter.print_where(m_location, m_heading);
+
+      // search back to the start
+      Serial.println(F("Search to start"));
+      maze.flood(START);
+      m_handStart = false;
+      search_to(START);
+
+      // the mouse is now stopped and the center of the start cell
+      // turn 180 to go back
+      turn_IP180();
+      delay(2000);
+      m_heading = behind_from(m_heading);
+      reporter.print_where(m_location, m_heading);
+
+    }
+
+    return 0;
+  }
+
+  /////////////////////////////////////////////////////////////////
+  //
+  // run_maze
+  //    run to the target and then return to the start
+  //
+  /////////////////////////////////////////////////////////////////
+
+  void run_maze() {
+    
+    Serial.println(F("Run Maze"));
+
+    sensors.wait_for_user_start();
+
+    // Run to target
+    m_location = START;
+    m_heading = NORTH;
+    Serial.println(F("Run to goal"));
     reporter.print_where(m_location, m_heading);
-    search_to(maze.goal());
+    run_to(maze.goal());
 
     // the mouse is now stopped at the center of maze.goal()
     // turn 180 to go back
     turn_IP180();
+    delay(2000);
     m_heading = behind_from(m_heading);
+    motion.move(-(BACK_WALL_TO_CENTER + 15), SEARCH_SPEED / 4, 0, SEARCH_ACCELERATION / 2);
     reporter.print_where(m_location, m_heading);
 
-
+    // run back to the start
+    Serial.println(F("Run to start"));
     maze.flood(START);
+    run_to(START);
 
-    m_handStart = false;
-    search_to(START);
+    // the mouse is now stopped and the center of the start cell
+    // turn 180 to go back
+    turn_IP180();
+    sensors.disable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
 
-    // it's now back at the start having learnt something
-    // so let's try again
-
-    turn_to_face(NORTH);
-    motion.stop();
-    motion.disable_drive();
-    return 0;
   }
+
 
   //***************************************************************************//
   //************  BELOW HERE ARE VARIOUS TEST FUNCTIONS ***********************//
@@ -975,6 +1093,57 @@ class Mouse {
         sensors.set_steering_mode(STEER_NORMAL);
         float distance = SENSING_POSITION - HALF_CELL;
         motion.move(distance, SEARCH_SPEED, SEARCH_SPEED, SEARCH_ACCELERATION);
+        motion.set_position(SENSING_POSITION);
+      }
+    }
+    sensors.disable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEERING_OFF);
+  }
+
+  //
+  //  A Quicker Wall Follow
+  //
+
+  void quicker_wall_follow() {
+    sensors.wait_for_user_start();
+    sensors.enable();
+    motion.reset_drive_system();
+    sensors.set_steering_mode(STEER_NORMAL);
+    motion.move(BACK_WALL_TO_CENTER, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+    motion.set_position(HALF_CELL);
+    motion.wait_until_position(SENSING_POSITION);
+    // at the start of this loop we are always at the sensing point
+    while (true) {
+      if (switches.button_pressed()) {
+        break;
+      }
+      sensors.set_steering_mode(STEER_NORMAL);
+      if (!sensors.see_left_wall) {
+        stop_at_center();
+        sensors.set_steering_mode(STEERING_OFF);
+        turn_IP90L();
+        sensors.set_steering_mode(STEER_NORMAL);
+        float distance = SENSING_POSITION - HALF_CELL;
+        motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+        motion.set_position(SENSING_POSITION);
+      } else if (!sensors.see_front_wall) {
+        move_ahead();
+      } else if (!sensors.see_right_wall) {
+        stop_at_center();
+        sensors.set_steering_mode(STEERING_OFF);
+        turn_IP90R();
+        sensors.set_steering_mode(STEER_NORMAL);
+        float distance = SENSING_POSITION - HALF_CELL;
+        motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
+        motion.set_position(SENSING_POSITION);
+      } else {
+        stop_at_center();
+        sensors.set_steering_mode(STEERING_OFF);
+        turn_IP180();
+        sensors.set_steering_mode(STEER_NORMAL);
+        float distance = SENSING_POSITION - HALF_CELL;
+        motion.move(distance, RUN_SPEED, RUN_SPEED, RUN_ACCELERATION);
         motion.set_position(SENSING_POSITION);
       }
     }

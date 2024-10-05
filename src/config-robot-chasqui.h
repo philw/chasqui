@@ -266,6 +266,9 @@ const int SMOOTH_TURN_SPEED = 500;
 const int FAST_TURN_SPEED = 600;
 const int FAST_RUN_SPEED_MAX = 2500;
 
+const int RUN_SPEED = 700;
+const int RUN_ACCELERATION = 2400;
+
 const float FAST_RUN_ACCELERATION = 3000;
 
 const int OMEGA_SPIN_TURN = 360 / 2;

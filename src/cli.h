@@ -354,7 +354,6 @@ class CommandLineInterface {
    */
   void run_function(int cmd) {
 
-    int r;
     Serial.println(cmd);
 
     if (cmd == 0) {
@@ -365,15 +364,13 @@ class CommandLineInterface {
         mouse.show_sensor_calibration();
         break;
       case 2:
-        //Serial.println(F("Start"));
-        r = mouse.search_maze();
-        Serial.println(r);
+        mouse.search_maze();
         break;
       case 3: {
         mouse.follow_to(maze.goal());
       } break;
       case 4:
-        mouse.test_SS90E();
+        mouse.run_maze();
         break;
       case 5:
         // mouse.test_SS90F(); // not implemented
@@ -406,7 +403,7 @@ class CommandLineInterface {
         mouse.less_slow_wall_follow();        
         break;
       case 15:
-        mouse.smooth_wall_follow();        
+        mouse.quicker_wall_follow();        
         break;
       default:
         // just to be safe...
