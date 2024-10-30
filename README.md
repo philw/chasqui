@@ -38,5 +38,5 @@ When it reaches the center it turns around and searches back to the start.
 
 #### 4 run_maze()
 This is very like **search_to(target)** but it calls the function **run_to(target)** 
-run_to does not update the map or flood the maze. It also uses faster speed and acceleration.
+which does not update the map or flood the maze. It also uses faster speed and acceleration.
 
