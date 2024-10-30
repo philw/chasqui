@@ -32,10 +32,11 @@ Again, only in place turns are used.
 Reset the Arduino with the user button on the main board held down to clear the maze data.
 
 #### 2 search_maze()
+This calls the function **search_to(target)**
+It searches to the target square updating the map and flooding the maze as it goes.
+When it reaches the center it turns around and searches back to the start.
 
-
-
-#### run_maze()
-
-
+#### 4 run_maze()
+This is very like **search_to(target)** but it calls the function **run_to(target)** 
+run_to does not update the map or flood the maze. It also uses faster speed and acceleration.
 
